@@ -29,6 +29,10 @@ structopt = "0.3.25"
 cargo_metadata = "0.14.1"
 tokio = { version = "1.15.0", features = ["full"] }
 atty = "0.2.14"
+dioxus-macro-inner = { path = "../../dioxus/packages/macro-inner" }
+syn = "1.0.85"
+quote = "1.0.14"
+prettyplease = "0.1.0"
 
 [[bin]]
 path = "src/main.rs"

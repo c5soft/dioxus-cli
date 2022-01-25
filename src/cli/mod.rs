@@ -1,7 +1,6 @@
-use anyhow::{Context, Result};
-use std::path::PathBuf;
 use structopt::StructOpt;
 
+pub mod autofmt;
 pub mod build;
 pub mod cfg;
 pub mod clean;

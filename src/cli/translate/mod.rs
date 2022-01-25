@@ -7,7 +7,6 @@ use structopt::StructOpt;
 
 pub mod extract_svgs;
 pub mod to_component;
-pub mod translate;
 
 /// Build the Rust WASM app and all of its assets.
 #[derive(Clone, Debug, StructOpt)]
@@ -45,16 +44,18 @@ impl Translate {
                 std::fs::read_to_string(&f)
                     .unwrap_or_else(|e| panic!("Could not read input file: {}", e))
             })
-            .unwrap_or(source.unwrap_or_else(|| {
-                if atty::is(atty::Stream::Stdin) {
-                    panic!("No input file, source, or stdin to translate from");
-                }
+            .unwrap_or_else(|| {
+                source.unwrap_or_else(|| {
+                    if atty::is(atty::Stream::Stdin) {
+                        panic!("No input file, source, or stdin to translate from");
+                    }
 
-                let mut buffer = String::new();
-                std::io::stdin().read_to_string(&mut buffer).unwrap();
+                    let mut buffer = String::new();
+                    std::io::stdin().read_to_string(&mut buffer).unwrap();
 
-                buffer.trim().to_string()
-            }));
+                    buffer.trim().to_string()
+                })
+            });
 
         // parse the input as html and prepare the output
         let dom = Dom::parse(&contents)?;
@@ -102,7 +103,8 @@ fn render_child(f: &mut impl Write, child: &Node, il: u32) -> std::fmt::Result {
                 }
                 write!(f, "\",")?;
             }
-            write!(f, "\n")?;
+
+            writeln!(f)?;
 
             // write the attributes
             if let Some(id) = &el.id {
